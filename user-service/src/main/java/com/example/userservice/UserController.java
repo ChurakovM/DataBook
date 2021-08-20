@@ -1,11 +1,11 @@
 package com.example.userservice;
 
-import com.example.userservice.persistence.UserPersistenceService;
 import com.example.userservice.requests.PostUserRequest;
 import com.example.userservice.requests.PutUserRequest;
-import com.example.userservice.service.UserService;
+import com.example.userservice.services.UserService;
+import java.util.List;
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +20,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("users") // http://localhost:8080/users
+@AllArgsConstructor
+@RequestMapping("users")// http://localhost:8080/users
 public class UserController {
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private UserPersistenceService userPersistenceService;
+    // TODO read about reflection
+    private final UserService userService;
 
     // TODO test this request with XML
     @PostMapping(
@@ -42,7 +40,6 @@ public class UserController {
     )
     public ResponseEntity<UserContact> createUser(@Valid @RequestBody PostUserRequest postUserRequest) {
         UserContact userContact = userService.createUser(postUserRequest);
-        userPersistenceService.addNewUserContact(userContact);
         return new ResponseEntity<>(userContact, HttpStatus.CREATED);
     }
 
@@ -52,14 +49,15 @@ public class UserController {
             MediaType.APPLICATION_JSON_VALUE
         })
     public ResponseEntity<UserContact> getUser(@PathVariable String userId) {
-        UserContact userContact = userPersistenceService.getUserContact(userId);
+        UserContact userContact = userService.getUser(userId);
         return new ResponseEntity<>(userContact, HttpStatus.OK);
     }
 
-    @GetMapping // method with query parameters
-    public String getUsers(@RequestParam(value = "page", defaultValue = "1", required = false) int page,
+    @GetMapping // TODO add support of query parameters
+    public ResponseEntity getUsers(@RequestParam(value = "page", defaultValue = "1", required = false) int page,
         @RequestParam(value = "limit", defaultValue = "20", required = false) int limit) {
-        return "'getUsers' method was called with page = " + page + " and limit = " + limit;
+        List<UserContact> userContacts = userService.getUsers();
+        return new ResponseEntity<>(userContacts, HttpStatus.OK);
     }
 
     @PutMapping(path = "/{userId}",
@@ -74,15 +72,13 @@ public class UserController {
     )
     public ResponseEntity<UserContact> updateUser(@PathVariable String userId,
         @Valid @RequestBody PutUserRequest putUserRequest) {
-        UserContact initialUserContact = userPersistenceService.getUserContact(userId);
-        UserContact updatedUserContact = userService.updateUser(initialUserContact, putUserRequest);
-        userPersistenceService.updateUserContact(userId, updatedUserContact);
-        return new ResponseEntity<>(updatedUserContact, HttpStatus.OK);
+        UserContact userContact = userService.updateUser(userId, putUserRequest);
+        return new ResponseEntity<>(userContact, HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{userId}")
     public ResponseEntity deleteUser(@PathVariable String userId) {
-        userPersistenceService.deleteUserContact(userId);
+        userService.deleteUser(userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

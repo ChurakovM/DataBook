@@ -2,19 +2,21 @@ package com.example.userservice.persistence;
 
 import com.example.userservice.UserContact;
 import com.example.userservice.exceptions.UserNotFoundException;
+import com.example.userservice.exceptions.UsersNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class UserPersistenceService {
 
     // TODO replace this implementation in the future with a real DB
     // TODO read about Concurrent Hash Map
-    private Map<String, UserContact> users = new HashMap<>();
-    private static final Logger LOGGER = LoggerFactory.getLogger("");
+    private final Map<String, UserContact> users = new HashMap<>();
 
     public void addNewUserContact(UserContact userContact) {
         users.put(userContact.getId(), userContact);
@@ -24,8 +26,17 @@ public class UserPersistenceService {
         if (users.containsKey(userId)) {
             return users.get(userId);
         } else {
-            LOGGER.debug("User id = '" + userId + "' was not found in the DB");
-            throw new UserNotFoundException();
+            log.debug("User id = '{}' was not found in the DB", userId);
+            throw new UserNotFoundException(userId);
+        }
+    }
+
+    public List<UserContact> getUserContacts() {
+        if (users.isEmpty()) {
+            log.debug("Users was not found in the DB"); // TODO add support of query parameters
+            throw new UsersNotFoundException();
+        } else {
+            return new ArrayList<>(users.values());
         }
     }
 
@@ -33,8 +44,8 @@ public class UserPersistenceService {
         if (users.containsKey(userId)) {
             users.replace(userId, userContact);
         } else {
-            LOGGER.debug("User id = '" + userId + "' was not found in the DB");
-            throw new UserNotFoundException();
+            log.debug("User id = '{}' was not found in the DB", userId);
+            throw new UserNotFoundException(userId);
         }
     }
 
@@ -42,8 +53,8 @@ public class UserPersistenceService {
         if (users.containsKey(userId)) {
             users.remove(userId);
         } else {
-            LOGGER.debug("User id = '" + userId + "' was not found in the DB");
-            throw new UserNotFoundException();
+            log.debug("User id = '{}' was not found in the DB", userId);
+            throw new UserNotFoundException(userId);
         }
     }
 }
