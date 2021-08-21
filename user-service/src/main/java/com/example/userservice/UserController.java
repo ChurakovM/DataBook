@@ -1,5 +1,7 @@
 package com.example.userservice;
 
+import com.example.userservice.models.UserContact;
+import com.example.userservice.models.UserContactQueryParameters;
 import com.example.userservice.requests.PostUserRequest;
 import com.example.userservice.requests.PutUserRequest;
 import com.example.userservice.services.UserService;
@@ -53,10 +55,14 @@ public class UserController {
         return new ResponseEntity<>(userContact, HttpStatus.OK);
     }
 
-    @GetMapping // TODO add support of query parameters
-    public ResponseEntity getUsers(@RequestParam(value = "page", defaultValue = "1", required = false) int page,
-        @RequestParam(value = "limit", defaultValue = "20", required = false) int limit) {
-        List<UserContact> userContacts = userService.getUsers();
+    @GetMapping
+    public ResponseEntity getUsers(
+        @RequestParam(value = "firstName", defaultValue = "", required = false) String firstName,
+        @RequestParam(value = "lastName", defaultValue = "", required = false) String lastName,
+        @RequestParam(value = "email", defaultValue = "", required = false) String email,
+        @RequestParam(value = "phoneNumber", defaultValue = "", required = false) String phoneNumber) {
+        UserContactQueryParameters queries = new UserContactQueryParameters(firstName, lastName, email, phoneNumber);
+        List<UserContact> userContacts = userService.getUsers(queries);
         return new ResponseEntity<>(userContacts, HttpStatus.OK);
     }
 

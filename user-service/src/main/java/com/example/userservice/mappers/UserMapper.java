@@ -1,6 +1,6 @@
 package com.example.userservice.mappers;
 
-import com.example.userservice.UserContact;
+import com.example.userservice.models.UserContact;
 import com.example.userservice.requests.PostUserRequest;
 import com.example.userservice.requests.PutUserRequest;
 import org.mapstruct.Mapper;

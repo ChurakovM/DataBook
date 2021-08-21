@@ -1,6 +1,6 @@
 package com.example.userservice.persistence;
 
-import com.example.userservice.UserContact;
+import com.example.userservice.models.UserContact;
 import com.example.userservice.exceptions.UserNotFoundException;
 import com.example.userservice.exceptions.UsersNotFoundException;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class UserPersistenceService {
 
     public List<UserContact> getUserContacts() {
         if (users.isEmpty()) {
-            log.debug("Users was not found in the DB"); // TODO add support of query parameters
+            log.debug("No users were found in the DB");
             throw new UsersNotFoundException();
         } else {
             return new ArrayList<>(users.values());
