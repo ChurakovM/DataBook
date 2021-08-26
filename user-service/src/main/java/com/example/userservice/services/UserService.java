@@ -35,10 +35,13 @@ public class UserService {
     public List<UserContact> getUsers(UserContactQueryParameters queries) {
         List<UserContact> retrievedUserContacts = userPersistenceService.getUserContacts()
             .stream()
-            .filter(userContact -> userContact.getFirstName().contains(queries.getFirstName()))
-            .filter(userContact -> userContact.getLastName().contains(queries.getLastName()))
-            .filter(userContact -> userContact.getEmail().contains(queries.getEmail()))
-            .filter(userContact -> userContact.getPhoneNumber().contains(queries.getPhoneNumber()))
+            .filter(userContact -> queries.getFirstName().isBlank() || userContact.getFirstName()
+                .contains(queries.getFirstName()))
+            .filter(userContact -> queries.getLastName().isBlank() || userContact.getLastName()
+                .contains(queries.getLastName()))
+            .filter(userContact -> queries.getEmail().isBlank() || userContact.getEmail().contains(queries.getEmail()))
+            .filter(userContact -> queries.getPhoneNumber().isBlank() || userContact.getPhoneNumber()
+                .contains(queries.getPhoneNumber()))
             .collect(Collectors.toList());
         if (retrievedUserContacts.isEmpty()) {
             throw new UsersNotFoundException();

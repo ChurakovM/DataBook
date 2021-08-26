@@ -1,10 +1,10 @@
-package com.example.accesscontrolservice;
+package com.example.authenticationservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AccessControlServiceApplicationTests {
+class AuthenticationServiceApplicationTests {
 
     @Test
     void contextLoads() {
