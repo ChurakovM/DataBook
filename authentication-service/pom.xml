@@ -15,6 +15,10 @@
   <description>Demo project for Spring Boot</description>
   <properties>
     <java.version>11</java.version>
+    <lombok.version>1.18.20</lombok.version>
+    <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
+    <mapstruct-processor.version>1.4.2.Final</mapstruct-processor.version>
+    <spring-data-jpa.version>2.5.4</spring-data-jpa.version>
     <spring-cloud.version>2020.0.3</spring-cloud.version>
   </properties>
   <dependencies>
@@ -31,6 +35,31 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>${org.mapstruct.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct-processor</artifactId>
+      <version>${mapstruct-processor.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+      <version>${spring-data-jpa.version}</version>
     </dependency>
   </dependencies>
   <dependencyManagement>
