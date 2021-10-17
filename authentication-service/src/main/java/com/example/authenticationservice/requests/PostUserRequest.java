@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PostEndUserRequest {
+public class PostUserRequest {
 
     private static final int MINIMAL_USER_NAME_LENGTH = 6;
     private static final int MINIMAL_PASSWORD_LENGTH = 9;

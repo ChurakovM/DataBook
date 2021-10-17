@@ -1,8 +1,8 @@
 package com.example.authenticationservice.controllers;
 
-import com.example.authenticationservice.models.EndUserModel;
-import com.example.authenticationservice.requests.PostEndUserRequest;
-import com.example.authenticationservice.services.EndUserService;
+import com.example.authenticationservice.requests.PostUserRequest;
+import com.example.authenticationservice.requests.PostUserResponse;
+import com.example.authenticationservice.services.UserService;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final EndUserService endUserService;
+    private final UserService userService;
 
     @GetMapping("/login")
     public String testApi() {
@@ -26,8 +26,8 @@ public class AuthController {
     }
 
     @PostMapping
-    public ResponseEntity<EndUserModel> createEndUser(@RequestBody @Valid PostEndUserRequest postEndUserRequest) {
-        EndUserModel createdEndUser = endUserService.createEndUser(postEndUserRequest);
+    public ResponseEntity<PostUserResponse> createEndUser(@RequestBody @Valid PostUserRequest postUserRequest) {
+        PostUserResponse createdEndUser = userService.createUser(postUserRequest);
         return new ResponseEntity<>(createdEndUser, HttpStatus.CREATED);
     }
 }
