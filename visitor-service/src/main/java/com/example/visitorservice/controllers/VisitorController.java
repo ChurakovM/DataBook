@@ -1,10 +1,10 @@
-package com.example.userservice.controllers;
+package com.example.visitorservice.controllers;
 
-import com.example.userservice.models.VisitorModel;
-import com.example.userservice.models.VisitorContactQueryParameters;
-import com.example.userservice.requests.PostVisitorRequest;
-import com.example.userservice.requests.PutVisitorRequest;
-import com.example.userservice.services.VisitorService;
+import com.example.visitorservice.models.VisitorModel;
+import com.example.visitorservice.models.VisitorContactQueryParameters;
+import com.example.visitorservice.requests.PostVisitorRequest;
+import com.example.visitorservice.requests.PutVisitorRequest;
+import com.example.visitorservice.services.VisitorService;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;

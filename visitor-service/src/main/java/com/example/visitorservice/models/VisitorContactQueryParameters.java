@@ -1,4 +1,4 @@
-package com.example.userservice.models;
+package com.example.visitorservice.models;
 
 import lombok.Getter;
 

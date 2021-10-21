@@ -1,8 +1,8 @@
-package com.example.userservice.mappers;
+package com.example.visitorservice.mappers;
 
-import com.example.userservice.models.VisitorModel;
-import com.example.userservice.requests.PostVisitorRequest;
-import com.example.userservice.requests.PutVisitorRequest;
+import com.example.visitorservice.models.VisitorModel;
+import com.example.visitorservice.requests.PostVisitorRequest;
+import com.example.visitorservice.requests.PutVisitorRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;

@@ -1,13 +1,13 @@
-package com.example.userservice.services;
+package com.example.visitorservice.services;
 
-import com.example.userservice.models.VisitorModel;
-import com.example.userservice.exceptions.VisitorsNotFoundException;
-import com.example.userservice.mappers.VisitorMapper;
-import com.example.userservice.models.VisitorContactQueryParameters;
-import com.example.userservice.persistence.VisitorPersistenceService;
-import com.example.userservice.requests.PostVisitorRequest;
-import com.example.userservice.requests.PutVisitorRequest;
-import com.example.userservice.utils.Utils;
+import com.example.visitorservice.exceptions.VisitorsNotFoundException;
+import com.example.visitorservice.mappers.VisitorMapper;
+import com.example.visitorservice.models.VisitorContactQueryParameters;
+import com.example.visitorservice.models.VisitorModel;
+import com.example.visitorservice.persistence.VisitorPersistenceService;
+import com.example.visitorservice.requests.PostVisitorRequest;
+import com.example.visitorservice.requests.PutVisitorRequest;
+import com.example.visitorservice.utils.Utils;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;

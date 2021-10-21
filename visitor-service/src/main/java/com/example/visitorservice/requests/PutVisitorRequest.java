@@ -1,4 +1,4 @@
-package com.example.userservice.requests;
+package com.example.visitorservice.requests;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;

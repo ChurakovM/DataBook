@@ -1,8 +1,8 @@
-package com.example.userservice.persistence;
+package com.example.visitorservice.persistence;
 
-import com.example.userservice.models.VisitorModel;
-import com.example.userservice.exceptions.VisitorNotFoundException;
-import com.example.userservice.exceptions.VisitorsNotFoundException;
+import com.example.visitorservice.models.VisitorModel;
+import com.example.visitorservice.exceptions.VisitorNotFoundException;
+import com.example.visitorservice.exceptions.VisitorsNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

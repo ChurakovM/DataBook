@@ -1,4 +1,4 @@
-package com.example.userservice.exceptions;
+package com.example.visitorservice.exceptions;
 
 import java.util.Date;
 import lombok.AllArgsConstructor;

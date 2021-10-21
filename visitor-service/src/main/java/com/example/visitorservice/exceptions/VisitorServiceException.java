@@ -1,4 +1,4 @@
-package com.example.userservice.exceptions;
+package com.example.visitorservice.exceptions;
 
 public class VisitorServiceException extends RuntimeException {
 
