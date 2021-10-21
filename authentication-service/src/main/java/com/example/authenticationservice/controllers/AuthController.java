@@ -6,6 +6,7 @@ import com.example.authenticationservice.services.UserService;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +26,8 @@ public class AuthController {
         return "Test user login method is working";
     }
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
+        produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<PostUserResponse> createEndUser(@RequestBody @Valid PostUserRequest postUserRequest) {
         PostUserResponse createdEndUser = userService.createUser(postUserRequest);
         return new ResponseEntity<>(createdEndUser, HttpStatus.CREATED);
