@@ -21,11 +21,6 @@ public class AuthController {
 
     private final UserService userService;
 
-    @GetMapping("/login")
-    public String testApi() {
-        return "Test user login method is working";
-    }
-
     @PostMapping(consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
         produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<PostUserResponse> createEndUser(@RequestBody @Valid PostUserRequest postUserRequest) {

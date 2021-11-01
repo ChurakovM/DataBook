@@ -5,11 +5,16 @@ import com.example.visitorservice.mappers.VisitorMapper;
 import com.example.visitorservice.models.VisitorContactQueryParameters;
 import com.example.visitorservice.models.VisitorModel;
 import com.example.visitorservice.persistence.VisitorPersistenceService;
+import com.example.visitorservice.persistence.VisitorsRepository;
 import com.example.visitorservice.requests.PostVisitorRequest;
 import com.example.visitorservice.requests.PutVisitorRequest;
-import com.example.visitorservice.utils.Utils;
+import com.example.visitorservice.responces.GetVisitorResponse;
+import com.example.visitorservice.responces.GetVisitorsResponse;
+import com.example.visitorservice.responces.PostVisitorResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,46 +23,46 @@ import org.springframework.stereotype.Service;
 public class VisitorService {
 
     private final VisitorPersistenceService visitorPersistenceService;
+    private final VisitorsRepository visitorsRepository;
     private final VisitorMapper visitorMapper;
 
-    public VisitorModel createVisitor(PostVisitorRequest postVisitorRequest) {
-        String visitorId = Utils.generateVisitorId();
+    public PostVisitorResponse createVisitor(PostVisitorRequest postVisitorRequest) {
         VisitorModel visitorModel = visitorMapper.postVisitorRequestToVisitorModel(postVisitorRequest);
-        visitorModel.setId(visitorId);
-        visitorPersistenceService.addNewVisitorModel(visitorModel);
-        return visitorModel;
+        visitorsRepository.save(visitorModel);
+        return visitorMapper.visitorModelToPostVisitorResponse(visitorModel);
     }
 
-    public VisitorModel getVisitor(String visitorId) {
-        return visitorPersistenceService.getVisitorModel(visitorId);
+    public GetVisitorResponse getVisitor(Long visitorId) {
+        VisitorModel visitorModel = visitorsRepository.findById(visitorId).orElseThrow(VisitorsNotFoundException::new);
+        return visitorMapper.visitorModelToGetVisitorResponse(visitorModel);
     }
 
-    public List<VisitorModel> getVisitors(VisitorContactQueryParameters queries) {
-        List<VisitorModel> retrievedVisitorModels = visitorPersistenceService.getVisitorModels()
-            .stream()
-            .filter(visitorModel -> queries.getFirstName().isBlank() || visitorModel.getFirstName()
-                .contains(queries.getFirstName()))
-            .filter(visitorModel -> queries.getLastName().isBlank() || visitorModel.getLastName()
-                .contains(queries.getLastName()))
-            .filter(visitorModel -> queries.getEmail().isBlank() || visitorModel.getEmail().contains(queries.getEmail()))
-            .filter(visitorModel -> queries.getPhoneNumber().isBlank() || visitorModel.getPhoneNumber()
-                .contains(queries.getPhoneNumber()))
+    public GetVisitorsResponse getVisitors(VisitorContactQueryParameters queries) {
+        // TODO filters don't work
+        List<VisitorModel> filteredVisitors = StreamSupport.stream(visitorsRepository.findAll().spliterator(), false)
+            .filter(visitorModel -> visitorModel.getFirstName().contains(queries.getFirstName()))
+            .filter(visitorModel -> visitorModel.getLastName().contains(queries.getLastName()))
+            .filter(visitorModel -> visitorModel.getEmail().contains(queries.getEmail()))
+            .filter(visitorModel -> visitorModel.getPhoneNumber().contains(queries.getPhoneNumber()))
             .collect(Collectors.toList());
-        if (retrievedVisitorModels.isEmpty()) {
-            throw new VisitorsNotFoundException();
-        } else {
-            return retrievedVisitorModels;
-        }
+        List<GetVisitorResponse> foundVisitors = new ArrayList<>();
+        filteredVisitors.forEach(visitorModel -> {
+            GetVisitorResponse foundVisitor = visitorMapper.visitorModelToGetVisitorResponse(visitorModel);
+            foundVisitors.add(foundVisitor);
+        });
+        GetVisitorsResponse finalResponse = new GetVisitorsResponse();
+        finalResponse.setListOfVisitors(foundVisitors);
+        return finalResponse;
     }
 
-    public VisitorModel updateVisitor(String visitorId, PutVisitorRequest putVisitorRequest) {
-        VisitorModel visitorModel = visitorMapper.putUserRequestToVisitorModel(putVisitorRequest);
-        visitorModel.setId(visitorId);
-        visitorPersistenceService.updateVisitorModel(visitorId, visitorModel);
-        return visitorModel;
-    }
+    // TODO implement this functionality
+//    public VisitorModel updateVisitor(Long visitorId, PutVisitorRequest putVisitorRequest) {
+//        VisitorModel visitorModel = visitorMapper.putUserRequestToVisitorModel(putVisitorRequest);
+//        visitorModel.setId(visitorId);
+//        visitorPersistenceService.updateVisitorModel(visitorId, visitorModel);
+//    }
 
-    public void deleteVisitor(String visitorId) {
-        visitorPersistenceService.deleteVisitorModel(visitorId);
+    public void deleteVisitor(Long visitorId) {
+        visitorsRepository.deleteById(visitorId);
     }
 }

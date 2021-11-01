@@ -21,7 +21,7 @@ public class UserModel {
     @Column(nullable = false, length = 70, unique = true)
     private String email;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String encryptedPassword;
 
     @Id

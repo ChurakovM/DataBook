@@ -16,74 +16,14 @@ public class AuthenticationServiceApplication {
     // TODO how to create a default admin once the service started?
     private static final String DEFAULT_ADMIN_USER_NAME = "admin";
     private static final String DEFAULT_ADMIN_USER_PASSWORD = "admin";
-    private static final UsersRepository usersRepository = new UsersRepository() {
-        @Override
-        public <S extends UserModel> S save(S s) {
-            return null;
-        }
+    //private final UsersRepository usersRepository;
 
-        @Override
-        public <S extends UserModel> Iterable<S> saveAll(Iterable<S> iterable) {
-            return null;
-        }
-
-        @Override
-        public Optional<UserModel> findById(Long aLong) {
-            return Optional.empty();
-        }
-
-        @Override
-        public boolean existsById(Long aLong) {
-            return false;
-        }
-
-        @Override
-        public Iterable<UserModel> findAll() {
-            return null;
-        }
-
-        @Override
-        public Iterable<UserModel> findAllById(Iterable<Long> iterable) {
-            return null;
-        }
-
-        @Override
-        public long count() {
-            return 0;
-        }
-
-        @Override
-        public void deleteById(Long aLong) {
-
-        }
-
-        @Override
-        public void delete(UserModel userModel) {
-
-        }
-
-        @Override
-        public void deleteAllById(Iterable<? extends Long> iterable) {
-
-        }
-
-        @Override
-        public void deleteAll(Iterable<? extends UserModel> iterable) {
-
-        }
-
-        @Override
-        public void deleteAll() {
-
-        }
-    };
-
-    static {
-        UserModel defaultAdminUser = new UserModel();
-        defaultAdminUser.setUserName(DEFAULT_ADMIN_USER_NAME);
-        defaultAdminUser.setEncryptedPassword(DEFAULT_ADMIN_USER_PASSWORD);
-        usersRepository.save(defaultAdminUser);
-    }
+//    static {
+//        UserModel defaultAdminUser = new UserModel();
+//        defaultAdminUser.setUserName(DEFAULT_ADMIN_USER_NAME);
+//        defaultAdminUser.setEncryptedPassword(DEFAULT_ADMIN_USER_PASSWORD);
+//        usersRepository.save(defaultAdminUser);
+//    }
 
     public static void main(String[] args) {
         SpringApplication.run(AuthenticationServiceApplication.class, args);
