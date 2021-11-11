@@ -1,10 +1,16 @@
 package com.example.visitorservice.services;
 
+import static com.example.visitorservice.persistence.SpecificationUtils.containsEmail;
+import static com.example.visitorservice.persistence.SpecificationUtils.containsFirstName;
+import static com.example.visitorservice.persistence.SpecificationUtils.containsLastName;
+import static com.example.visitorservice.persistence.SpecificationUtils.containsPhoneNumber;
+import static org.springframework.data.jpa.domain.Specification.where;
+
+import com.example.visitorservice.exceptions.VisitorNotFoundException;
 import com.example.visitorservice.exceptions.VisitorsNotFoundException;
 import com.example.visitorservice.mappers.VisitorMapper;
 import com.example.visitorservice.models.VisitorContactQueryParameters;
 import com.example.visitorservice.models.VisitorModel;
-import com.example.visitorservice.persistence.VisitorPersistenceService;
 import com.example.visitorservice.persistence.VisitorsRepository;
 import com.example.visitorservice.requests.PostVisitorRequest;
 import com.example.visitorservice.requests.PutVisitorRequest;
@@ -16,13 +22,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class VisitorService {
 
-    private final VisitorPersistenceService visitorPersistenceService;
     private final VisitorsRepository visitorsRepository;
     private final VisitorMapper visitorMapper;
 
@@ -38,29 +44,29 @@ public class VisitorService {
     }
 
     public GetVisitorsResponse getVisitors(VisitorContactQueryParameters queries) {
-        // TODO filters don't work
-        List<VisitorModel> filteredVisitors = StreamSupport.stream(visitorsRepository.findAll().spliterator(), false)
-            .filter(visitorModel -> visitorModel.getFirstName().contains(queries.getFirstName()))
-            .filter(visitorModel -> visitorModel.getLastName().contains(queries.getLastName()))
-            .filter(visitorModel -> visitorModel.getEmail().contains(queries.getEmail()))
-            .filter(visitorModel -> visitorModel.getPhoneNumber().contains(queries.getPhoneNumber()))
-            .collect(Collectors.toList());
-        List<GetVisitorResponse> foundVisitors = new ArrayList<>();
-        filteredVisitors.forEach(visitorModel -> {
-            GetVisitorResponse foundVisitor = visitorMapper.visitorModelToGetVisitorResponse(visitorModel);
-            foundVisitors.add(foundVisitor);
-        });
+        List<VisitorModel> filteredVisitors = visitorsRepository.findAll(
+            where(containsFirstName(queries.getFirstName()))
+                .and(containsLastName(queries.getLastName()))
+                .and(containsEmail(queries.getEmail()))
+                .and(containsPhoneNumber(queries.getPhoneNumber())));
         GetVisitorsResponse finalResponse = new GetVisitorsResponse();
-        finalResponse.setListOfVisitors(foundVisitors);
+        finalResponse.setListOfVisitors(filteredVisitors);
         return finalResponse;
     }
 
-    // TODO implement this functionality
-//    public VisitorModel updateVisitor(Long visitorId, PutVisitorRequest putVisitorRequest) {
-//        VisitorModel visitorModel = visitorMapper.putUserRequestToVisitorModel(putVisitorRequest);
-//        visitorModel.setId(visitorId);
-//        visitorPersistenceService.updateVisitorModel(visitorId, visitorModel);
-//    }
+    public VisitorModel updateVisitor(Long visitorId, PutVisitorRequest putVisitorRequest) {
+        if (visitorsRepository.existsById(visitorId)) {
+            VisitorModel foundModel = visitorsRepository.findById(visitorId).orElseThrow();
+            foundModel.setFirstName(putVisitorRequest.getFirstName());
+            foundModel.setLastName(putVisitorRequest.getLastName());
+            foundModel.setEmail(putVisitorRequest.getEmail());
+            foundModel.setPhoneNumber(putVisitorRequest.getPhoneNumber());
+            visitorsRepository.save(foundModel);
+            return foundModel;
+        } else {
+            throw new VisitorNotFoundException(visitorId.toString());
+        }
+    }
 
     public void deleteVisitor(Long visitorId) {
         visitorsRepository.deleteById(visitorId);

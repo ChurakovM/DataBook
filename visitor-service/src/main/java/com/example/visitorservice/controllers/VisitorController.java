@@ -8,9 +8,9 @@ import com.example.visitorservice.responces.GetVisitorResponse;
 import com.example.visitorservice.responces.GetVisitorsResponse;
 import com.example.visitorservice.responces.PostVisitorResponse;
 import com.example.visitorservice.services.VisitorService;
-import java.util.List;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +26,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
+@Slf4j
 @RequestMapping("visitors")// http://localhost:8080/visitors
 public class VisitorController {
 
     private static final String VISITOR_ID_PATH = "/{visitorId}";
-
     // TODO read about reflection
     private final VisitorService visitorService;
 
@@ -39,7 +39,8 @@ public class VisitorController {
         consumes = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
         produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
-    public ResponseEntity<PostVisitorResponse> createVisitor(@Valid @RequestBody PostVisitorRequest postVisitorRequest) {
+    public ResponseEntity<PostVisitorResponse> createVisitor(
+        @Valid @RequestBody PostVisitorRequest postVisitorRequest) {
         PostVisitorResponse postVisitorResponse = visitorService.createVisitor(postVisitorRequest);
         return new ResponseEntity<>(postVisitorResponse, HttpStatus.CREATED);
     }
@@ -54,26 +55,28 @@ public class VisitorController {
 
     @GetMapping
     public ResponseEntity<GetVisitorsResponse> getVisitors(
-        @RequestParam(value = "firstNameQuery", defaultValue = "", required = false) String firstNameQuery,
-        @RequestParam(value = "lastNameQuery", defaultValue = "", required = false) String lastNameQuery,
-        @RequestParam(value = "emailQuery", defaultValue = "", required = false) String emailQuery,
-        @RequestParam(value = "phoneNumberQuery", defaultValue = "", required = false) String phoneNumberQuery) {
-        VisitorContactQueryParameters queries = new VisitorContactQueryParameters(firstNameQuery, lastNameQuery, emailQuery,
-            phoneNumberQuery);
+        @RequestParam(value = "firstName", defaultValue = "", required = false) String firstName,
+        @RequestParam(value = "lastName", defaultValue = "", required = false) String lastName,
+        @RequestParam(value = "email", defaultValue = "", required = false) String email,
+        @RequestParam(value = "phoneNumber", defaultValue = "", required = false) String phoneNumber) {
+        VisitorContactQueryParameters queries = new VisitorContactQueryParameters(firstName, lastName,
+            email, phoneNumber);
+        log.debug(
+            "Get visitor with the following query parameters, firstName = {}, lastName = {}, email = {} and phoneNumber = {}",
+            firstName, lastName, email, phoneNumber);
         GetVisitorsResponse getVisitorsResponse = visitorService.getVisitors(queries);
         return new ResponseEntity<>(getVisitorsResponse, HttpStatus.OK);
     }
 
-    // TODO make it work
-//    @PutMapping(path = VISITOR_ID_PATH,
-//        consumes = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
-//        produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
-//    )
-//    public ResponseEntity<VisitorModel> updateVisitor(@PathVariable Long visitorId,
-//        @Valid @RequestBody PutVisitorRequest putVisitorRequest) {
-//        VisitorModel visitorModel = visitorService.updateVisitor(visitorId, putVisitorRequest);
-//        return new ResponseEntity<>(visitorModel, HttpStatus.OK);
-//    }
+    @PutMapping(path = VISITOR_ID_PATH,
+        consumes = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
+        produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+    )
+    public ResponseEntity<VisitorModel> updateVisitor(@PathVariable Long visitorId,
+        @Valid @RequestBody PutVisitorRequest putVisitorRequest) {
+        VisitorModel visitorModel = visitorService.updateVisitor(visitorId, putVisitorRequest);
+        return new ResponseEntity<>(visitorModel, HttpStatus.OK);
+    }
 
     @DeleteMapping(path = VISITOR_ID_PATH)
     public ResponseEntity<VisitorModel> deleteVisitor(@PathVariable Long visitorId) {

@@ -1,7 +1,7 @@
 package com.example.authenticationservice.security;
 
 import com.example.authenticationservice.requests.LoginRequest;
-import com.example.authenticationservice.services.UserService;
+import com.example.authenticationservice.services.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @AllArgsConstructor
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final UserService userService;
+    private final AuthService authService;
     private final Environment environment;
     private final AuthenticationManager authenticationManager;
 
@@ -43,7 +43,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
         Authentication authResult) {
         String userName = ((User) authResult.getPrincipal()).getUsername();
-        UserDetails userDetails = userService.loadUserByUsername(userName);
+        UserDetails userDetails = authService.loadUserByUsername(userName);
 
         String token = Jwts.builder()
             .setSubject(userDetails.getUsername())

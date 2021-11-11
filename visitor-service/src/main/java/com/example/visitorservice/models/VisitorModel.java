@@ -17,7 +17,7 @@ public class VisitorModel {
 
     // TODO how can I generate unique ID?, sequence doesn't work properly
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     @Column(nullable = false, length = 70)

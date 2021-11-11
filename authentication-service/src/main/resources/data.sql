@@ -1,0 +1,1 @@
+INSERT INTO `endusers` (id, user_name, email, encrypted_password) VALUES ('1','admin', 'admin@test.com', '$2a$12$0VbVJPsnH9zbkoNlmyhb/uVruPsU6maBN/dmfurfO3tGOJKOHjfRi');
