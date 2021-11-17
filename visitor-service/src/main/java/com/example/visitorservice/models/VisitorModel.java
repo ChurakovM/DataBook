@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 @Getter
 @Setter
@@ -15,10 +16,13 @@ import lombok.Setter;
 @Table(name="visitors")
 public class VisitorModel {
 
-    // TODO how can I generate unique ID?, sequence doesn't work properly
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+        name = "UUID",
+        strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    private String id;
 
     @Column(nullable = false, length = 70)
     private String firstName;

@@ -48,7 +48,7 @@ public class VisitorController {
     @GetMapping(path = VISITOR_ID_PATH,
         produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
-    public ResponseEntity<GetVisitorResponse> getVisitor(@PathVariable Long visitorId) {
+    public ResponseEntity<GetVisitorResponse> getVisitor(@PathVariable String visitorId) {
         GetVisitorResponse getVisitorResponse = visitorService.getVisitor(visitorId);
         return new ResponseEntity<>(getVisitorResponse, HttpStatus.OK);
     }
@@ -72,14 +72,14 @@ public class VisitorController {
         consumes = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
         produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
-    public ResponseEntity<VisitorModel> updateVisitor(@PathVariable Long visitorId,
+    public ResponseEntity<VisitorModel> updateVisitor(@PathVariable String visitorId,
         @Valid @RequestBody PutVisitorRequest putVisitorRequest) {
         VisitorModel visitorModel = visitorService.updateVisitor(visitorId, putVisitorRequest);
         return new ResponseEntity<>(visitorModel, HttpStatus.OK);
     }
 
     @DeleteMapping(path = VISITOR_ID_PATH)
-    public ResponseEntity<VisitorModel> deleteVisitor(@PathVariable Long visitorId) {
+    public ResponseEntity<VisitorModel> deleteVisitor(@PathVariable String visitorId) {
         visitorService.deleteVisitor(visitorId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

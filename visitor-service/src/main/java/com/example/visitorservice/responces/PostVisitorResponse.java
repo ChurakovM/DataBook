@@ -7,6 +7,5 @@ import lombok.Setter;
 @Setter
 public class PostVisitorResponse {
 
-    private Long id;
-    private String firstName, lastName, email, phoneNumber;
+    private String id, firstName, lastName, email, phoneNumber;
 }
