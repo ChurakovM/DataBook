@@ -10,8 +10,7 @@ import java.util.Date;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
-import org.springframework.core.env.Environment;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,11 +19,15 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+    private static final String TOKEN_HEADER = "token";
+    private static final String USER_NAME_HEADER = "userName";
+
     private final AuthService authService;
-    private final Environment environment;
+    private final String tokenSecret;
+    private final int tokenExpirationTime;
     private final AuthenticationManager authenticationManager;
 
     @Override
@@ -33,7 +36,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         try {
             LoginRequest credentials = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
             return authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(credentials.getUserName(), credentials.getPassword()));
+                .authenticate(
+                    new UsernamePasswordAuthenticationToken(credentials.getUserName(), credentials.getPassword()));
         } catch (IOException ex) {
             throw new RuntimeException("Something went wrong with the login functionality", ex);
         }
@@ -47,11 +51,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         String token = Jwts.builder()
             .setSubject(userDetails.getUsername())
-            .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(environment.getProperty("token.expiration_time"))))
-            .signWith(SignatureAlgorithm.HS512, environment.getProperty("token.secret"))
+            .setExpiration(new Date(System.currentTimeMillis() + tokenExpirationTime))
+            .signWith(SignatureAlgorithm.HS512, tokenSecret)
             .compact();
 
-        response.addHeader("token", token);
-        response.addHeader("userName", userDetails.getUsername());
+        response.addHeader(TOKEN_HEADER, token);
+        response.addHeader(USER_NAME_HEADER, userDetails.getUsername());
     }
 }
