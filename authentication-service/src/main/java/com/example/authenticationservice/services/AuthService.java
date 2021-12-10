@@ -21,7 +21,6 @@ public class AuthService implements UserDetailsService {
 
     private final UserMapper userMapper;
     private final UsersRepository usersRepository;
-    // TODO Why do I have to initialize this variable explicitly?
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public PostUserResponse createUser(PostUserRequest postUserRequest) {
@@ -36,7 +35,7 @@ public class AuthService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         UserModel userModel = usersRepository.findByUserName(userName);
-        if(userModel == null) {
+        if (userModel == null) {
             throw new UsernameNotFoundException(userName);
         } else {
             return new User(userModel.getUserName(), userModel.getEncryptedPassword(),
