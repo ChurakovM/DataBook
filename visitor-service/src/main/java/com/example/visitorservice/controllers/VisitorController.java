@@ -8,7 +8,9 @@ import com.example.visitorservice.responces.GetVisitorResponse;
 import com.example.visitorservice.responces.GetVisitorsResponse;
 import com.example.visitorservice.responces.PostVisitorResponse;
 import com.example.visitorservice.services.VisitorService;
+
 import javax.validation.Valid;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,46 +36,49 @@ public class VisitorController {
     // TODO read about reflection
     private final VisitorService visitorService;
 
-    // TODO test this request with XML
     @PostMapping(
-        consumes = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
-        produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+            consumes = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
     public ResponseEntity<PostVisitorResponse> createVisitor(
-        @Valid @RequestBody PostVisitorRequest postVisitorRequest) {
+            @Valid @RequestBody PostVisitorRequest postVisitorRequest) {
         PostVisitorResponse postVisitorResponse = visitorService.createVisitor(postVisitorRequest);
         return new ResponseEntity<>(postVisitorResponse, HttpStatus.CREATED);
     }
 
     @GetMapping(path = VISITOR_ID_PATH,
-        produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+            consumes = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
     public ResponseEntity<GetVisitorResponse> getVisitor(@PathVariable String visitorId) {
         GetVisitorResponse getVisitorResponse = visitorService.getVisitor(visitorId);
         return new ResponseEntity<>(getVisitorResponse, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping(
+            consumes = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+    )
     public ResponseEntity<GetVisitorsResponse> getVisitors(
-        @RequestParam(value = "firstName", defaultValue = "", required = false) String firstName,
-        @RequestParam(value = "lastName", defaultValue = "", required = false) String lastName,
-        @RequestParam(value = "email", defaultValue = "", required = false) String email,
-        @RequestParam(value = "phoneNumber", defaultValue = "", required = false) String phoneNumber) {
+            @RequestParam(value = "firstName", defaultValue = "", required = false) String firstName,
+            @RequestParam(value = "lastName", defaultValue = "", required = false) String lastName,
+            @RequestParam(value = "email", defaultValue = "", required = false) String email,
+            @RequestParam(value = "phoneNumber", defaultValue = "", required = false) String phoneNumber) {
         VisitorContactQueryParameters queries = new VisitorContactQueryParameters(firstName, lastName,
-            email, phoneNumber);
+                email, phoneNumber);
         log.debug(
-            "Get visitor with the following query parameters, firstName = {}, lastName = {}, email = {} and phoneNumber = {}",
-            firstName, lastName, email, phoneNumber);
+                "Get visitor with the following query parameters, firstName = {}, lastName = {}, email = {} and phoneNumber = {}",
+                firstName, lastName, email, phoneNumber);
         GetVisitorsResponse getVisitorsResponse = visitorService.getVisitors(queries);
         return new ResponseEntity<>(getVisitorsResponse, HttpStatus.OK);
     }
 
     @PutMapping(path = VISITOR_ID_PATH,
-        consumes = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
-        produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+            consumes = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
     public ResponseEntity<VisitorModel> updateVisitor(@PathVariable String visitorId,
-        @Valid @RequestBody PutVisitorRequest putVisitorRequest) {
+                                                      @Valid @RequestBody PutVisitorRequest putVisitorRequest) {
         VisitorModel visitorModel = visitorService.updateVisitor(visitorId, putVisitorRequest);
         return new ResponseEntity<>(visitorModel, HttpStatus.OK);
     }

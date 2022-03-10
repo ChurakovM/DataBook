@@ -20,6 +20,7 @@ import com.example.visitorservice.responces.PostVisitorResponse;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @AllArgsConstructor
@@ -27,6 +28,7 @@ public class VisitorService {
 
     private final VisitorsRepository visitorsRepository;
     private final VisitorMapper visitorMapper;
+    private final RestTemplate restTemplate;
 
     public PostVisitorResponse createVisitor(PostVisitorRequest postVisitorRequest) {
         VisitorModel visitorModel = visitorMapper.postVisitorRequestToVisitorModel(postVisitorRequest);
