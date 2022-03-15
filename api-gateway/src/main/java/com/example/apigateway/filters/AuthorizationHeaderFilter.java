@@ -33,7 +33,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
 
-            if(!request.getHeaders().containsKey(AUTHORIZATION)) {
+            if (!request.getHeaders().containsKey(AUTHORIZATION)) {
                 return onError(exchange);
             }
 
@@ -42,7 +42,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
             boolean isTokenValid = isJwtTokenValid(jwtToken);
 
-            if(!isTokenValid) {
+            if (!isTokenValid) {
                 return onError(exchange);
             }
 
@@ -60,11 +60,11 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         String subject = null;
         try {
             subject = Jwts
-                .parser()
-                .setSigningKey(tokenSecret)
-                .parseClaimsJws(jwtToken)
-                .getBody()
-                .getSubject();
+                    .parser()
+                    .setSigningKey(tokenSecret)
+                    .parseClaimsJws(jwtToken)
+                    .getBody()
+                    .getSubject();
         } catch (SignatureException ex) {
             log.debug("JWT token is invalid", ex);
         }
