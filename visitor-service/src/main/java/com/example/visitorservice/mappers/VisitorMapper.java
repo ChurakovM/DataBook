@@ -1,13 +1,13 @@
 package com.example.visitorservice.mappers;
 
 import com.example.visitorservice.models.VisitorModel;
-import com.example.visitorservice.requests.PostVisitorRequest;
-import com.example.visitorservice.requests.PutVisitorRequest;
-import com.example.visitorservice.responces.GetVisitorResponse;
-import com.example.visitorservice.responces.PostVisitorResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
+import visitorservice.requests.PostVisitorRequest;
+import visitorservice.requests.PutVisitorRequest;
+import visitorservice.responses.GetVisitorResponse;
+import visitorservice.responses.PostVisitorResponse;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR, componentModel = "spring")
 public interface VisitorMapper {

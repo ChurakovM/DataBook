@@ -24,9 +24,12 @@ public class BookModel {
     )
     private String id;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 70)
     private String authorName;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 70)
     private String bookName;
+
+    @Column(length = 70)
+    private String visitorId;
 }

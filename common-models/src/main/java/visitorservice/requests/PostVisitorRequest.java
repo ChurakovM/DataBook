@@ -1,14 +1,14 @@
-package com.example.visitorservice.requests;
+package visitorservice.requests;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class PutVisitorRequest {
+public class PostVisitorRequest {
 
     @NotNull(message = "First Name cannot be null")
     @Size(min = 1, message = "First Name length must be at least 1 character")

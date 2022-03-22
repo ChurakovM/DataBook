@@ -1,4 +1,4 @@
-package com.example.visitorservice.models;
+package visitorservice.queries;
 
 import lombok.Getter;
 

@@ -7,20 +7,24 @@ import static com.example.visitorservice.persistence.SpecificationUtils.contains
 import static com.example.visitorservice.persistence.SpecificationUtils.matchesId;
 import static org.springframework.data.jpa.domain.Specification.where;
 
+import bookservice.responses.GetBooksResponse;
 import com.example.visitorservice.exceptions.VisitorNotFoundException;
 import com.example.visitorservice.mappers.VisitorMapper;
-import com.example.visitorservice.models.VisitorContactQueryParameters;
 import com.example.visitorservice.models.VisitorModel;
 import com.example.visitorservice.persistence.VisitorsRepository;
-import com.example.visitorservice.requests.PostVisitorRequest;
-import com.example.visitorservice.requests.PutVisitorRequest;
-import com.example.visitorservice.responces.GetVisitorResponse;
-import com.example.visitorservice.responces.GetVisitorsResponse;
-import com.example.visitorservice.responces.PostVisitorResponse;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import visitorservice.queries.VisitorContactQueryParameters;
+import visitorservice.requests.PostVisitorRequest;
+import visitorservice.requests.PutVisitorRequest;
+import visitorservice.responses.GetVisitorResponse;
+import visitorservice.responses.GetVisitorsResponse;
+import visitorservice.responses.PostVisitorResponse;
 
 @Service
 @AllArgsConstructor
@@ -38,6 +42,13 @@ public class VisitorService {
 
     public GetVisitorResponse getVisitor(String visitorId) {
         VisitorModel visitorModel = findVisitorInRepository(visitorId);
+
+        // TODO make a call to Book Service and get users' books
+        String bookServiceUrl = "";
+        ResponseEntity<GetBooksResponse> responseFromBookService = restTemplate.exchange(bookServiceUrl, HttpMethod.GET,
+            null, new ParameterizedTypeReference<>() {
+            });
+
         return visitorMapper.visitorModelToGetVisitorResponse(visitorModel);
     }
 

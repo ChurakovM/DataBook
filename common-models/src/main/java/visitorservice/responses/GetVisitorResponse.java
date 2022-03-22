@@ -1,11 +1,11 @@
-package com.example.visitorservice.responces;
+package visitorservice.responses;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class PostVisitorResponse {
+public class GetVisitorResponse {
 
     private String id, firstName, lastName, email, phoneNumber;
 }
