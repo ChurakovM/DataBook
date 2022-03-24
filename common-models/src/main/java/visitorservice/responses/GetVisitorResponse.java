@@ -1,5 +1,6 @@
 package visitorservice.responses;
 
+import bookservice.responses.GetBooksResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,4 +9,5 @@ import lombok.Setter;
 public class GetVisitorResponse {
 
     private String id, firstName, lastName, email, phoneNumber;
+    private GetBooksResponse booksOfVisitor;
 }

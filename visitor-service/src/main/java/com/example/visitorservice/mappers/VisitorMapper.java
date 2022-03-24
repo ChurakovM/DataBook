@@ -18,7 +18,8 @@ public interface VisitorMapper {
     @Mapping(target = "id", ignore = true)
     VisitorModel putUserRequestToVisitorModel(PutVisitorRequest putVisitorRequest);
 
-    // Visitor Model to other objets
     PostVisitorResponse visitorModelToPostVisitorResponse(VisitorModel visitorModel);
+
+    @Mapping(target = "booksOfVisitor", ignore = true)
     GetVisitorResponse visitorModelToGetVisitorResponse(VisitorModel visitorModel);
 }

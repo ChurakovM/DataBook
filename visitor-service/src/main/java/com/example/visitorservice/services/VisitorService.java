@@ -15,7 +15,11 @@ import com.example.visitorservice.persistence.VisitorsRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -43,16 +47,22 @@ public class VisitorService {
     public GetVisitorResponse getVisitor(String visitorId) {
         VisitorModel visitorModel = findVisitorInRepository(visitorId);
 
-        // TODO make a call to Book Service and get users' books
-        String bookServiceUrl = "";
-        ResponseEntity<GetBooksResponse> responseFromBookService = restTemplate.exchange(bookServiceUrl, HttpMethod.GET,
-            null, new ParameterizedTypeReference<>() {
-            });
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        return visitorMapper.visitorModelToGetVisitorResponse(visitorModel);
+        String bookServiceUrl = "http://BOOKS-SERVICE/books?visitorId={visitorId}";
+        ParameterizedTypeReference<GetBooksResponse> parameterizedTypeReference = new ParameterizedTypeReference<>() {};
+        ResponseEntity<GetBooksResponse> responseFromBookService = restTemplate.exchange(bookServiceUrl, HttpMethod.GET,
+            new HttpEntity<>(headers), parameterizedTypeReference, visitorId);
+        GetBooksResponse booksOfVisitor = responseFromBookService.getBody();
+        GetVisitorResponse response = visitorMapper.visitorModelToGetVisitorResponse(visitorModel);
+        response.setBooksOfVisitor(booksOfVisitor);
+
+        return response;
     }
 
-    public GetVisitorsResponse getVisitors(VisitorContactQueryParameters queries) {
+    public GetVisitorsResponse getVisitors(VisitorContactQueryParameters queries) { // TODO fix a bug with empty queries
         List<VisitorModel> filteredVisitors = visitorsRepository.findAll(
             where(containsFirstName(queries.getFirstName()))
                 .and(containsLastName(queries.getLastName()))
