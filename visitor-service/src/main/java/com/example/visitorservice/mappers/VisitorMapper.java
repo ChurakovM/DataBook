@@ -20,6 +20,6 @@ public interface VisitorMapper {
 
     PostVisitorResponse visitorModelToPostVisitorResponse(VisitorModel visitorModel);
 
-    @Mapping(target = "booksOfVisitor", ignore = true)
+    @Mapping(target = "listOfBooks", ignore = true)
     GetVisitorResponse visitorModelToGetVisitorResponse(VisitorModel visitorModel);
 }

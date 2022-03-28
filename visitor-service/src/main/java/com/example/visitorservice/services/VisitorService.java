@@ -57,7 +57,7 @@ public class VisitorService {
             new HttpEntity<>(headers), parameterizedTypeReference, visitorId);
         GetBooksResponse booksOfVisitor = responseFromBookService.getBody();
         GetVisitorResponse response = visitorMapper.visitorModelToGetVisitorResponse(visitorModel);
-        response.setBooksOfVisitor(booksOfVisitor);
+        response.setListOfBooks(booksOfVisitor.getListOfBooks());
 
         return response;
     }
