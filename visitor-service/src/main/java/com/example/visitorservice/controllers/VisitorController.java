@@ -2,9 +2,7 @@ package com.example.visitorservice.controllers;
 
 import com.example.visitorservice.models.VisitorModel;
 import com.example.visitorservice.services.VisitorService;
-
 import javax.validation.Valid;
-
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

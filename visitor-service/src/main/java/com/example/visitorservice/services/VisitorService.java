@@ -8,6 +8,8 @@ import static com.example.visitorservice.persistence.SpecificationUtils.matchesI
 import static org.springframework.data.jpa.domain.Specification.where;
 
 import bookservice.responses.GetBooksResponse;
+import bookservice.responses.ShortBookInfoResponse;
+import com.example.visitorservice.clients.BooksServiceClient;
 import com.example.visitorservice.exceptions.VisitorNotFoundException;
 import com.example.visitorservice.mappers.VisitorMapper;
 import com.example.visitorservice.models.VisitorModel;
@@ -19,7 +21,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -36,7 +37,8 @@ public class VisitorService {
 
     private final VisitorsRepository visitorsRepository;
     private final VisitorMapper visitorMapper;
-    private final RestTemplate restTemplate;
+    //private final RestTemplate restTemplate;
+    private final BooksServiceClient booksServiceClient;
 
     public PostVisitorResponse createVisitor(PostVisitorRequest postVisitorRequest) {
         VisitorModel visitorModel = visitorMapper.postVisitorRequestToVisitorModel(postVisitorRequest);
@@ -46,18 +48,20 @@ public class VisitorService {
 
     public GetVisitorResponse getVisitor(String visitorId) {
         VisitorModel visitorModel = findVisitorInRepository(visitorId);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        String bookServiceUrl = "http://BOOKS-SERVICE/books?visitorId={visitorId}";
-        ParameterizedTypeReference<GetBooksResponse> parameterizedTypeReference = new ParameterizedTypeReference<>() {};
-        ResponseEntity<GetBooksResponse> responseFromBookService = restTemplate.exchange(bookServiceUrl, HttpMethod.GET,
-            new HttpEntity<>(headers), parameterizedTypeReference, visitorId);
-        GetBooksResponse booksOfVisitor = responseFromBookService.getBody();
         GetVisitorResponse response = visitorMapper.visitorModelToGetVisitorResponse(visitorModel);
-        response.setListOfBooks(booksOfVisitor.getListOfBooks());
+
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+
+//        String bookServiceUrl = "http://BOOKS-SERVICE/books?visitorId={visitorId}";
+//        ParameterizedTypeReference<GetBooksResponse> parameterizedTypeReference = new ParameterizedTypeReference<>() {};
+//        ResponseEntity<GetBooksResponse> responseFromBookService = restTemplate.exchange(bookServiceUrl, HttpMethod.GET,
+//            new HttpEntity<>(headers), parameterizedTypeReference, visitorId);
+//        GetBooksResponse booksOfVisitor = responseFromBookService.getBody();
+        GetBooksResponse responseFromBookService = booksServiceClient.getBooks(visitorId);
+
+        response.setListOfBooks(responseFromBookService.getListOfBooks());
 
         return response;
     }
