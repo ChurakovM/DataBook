@@ -1,5 +1,6 @@
 package com.example.visitorservice;
 
+import com.example.visitorservice.clients.FeignErrorDecoder;
 import feign.Logger;
 import feign.Logger.Level;
 import org.springframework.boot.SpringApplication;
@@ -30,4 +31,8 @@ public class VisitorServiceApplication {
 		return Level.FULL;
 	}
 
+	@Bean
+	public FeignErrorDecoder getFeignErrorDecoder() {
+		return new FeignErrorDecoder();
+	}
 }

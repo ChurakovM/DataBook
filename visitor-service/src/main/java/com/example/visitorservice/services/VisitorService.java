@@ -14,8 +14,10 @@ import com.example.visitorservice.exceptions.VisitorNotFoundException;
 import com.example.visitorservice.mappers.VisitorMapper;
 import com.example.visitorservice.models.VisitorModel;
 import com.example.visitorservice.persistence.VisitorsRepository;
+import feign.FeignException;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -33,6 +35,7 @@ import visitorservice.responses.PostVisitorResponse;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class VisitorService {
 
     private final VisitorsRepository visitorsRepository;
@@ -60,7 +63,6 @@ public class VisitorService {
 //            new HttpEntity<>(headers), parameterizedTypeReference, visitorId);
 //        GetBooksResponse booksOfVisitor = responseFromBookService.getBody();
         GetBooksResponse responseFromBookService = booksServiceClient.getBooks(visitorId);
-
         response.setListOfBooks(responseFromBookService.getListOfBooks());
 
         return response;
