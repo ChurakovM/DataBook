@@ -8,4 +8,5 @@ import lombok.Setter;
 public class ShortBookInfoResponse {
 
     private String id, authorName, bookName;
+
 }

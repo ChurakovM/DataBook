@@ -6,7 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "books-service")
+@FeignClient(name = "books-service", fallbackFactory = BookServiceFallbackFactory.class)
 public interface BooksServiceClient {
 
     @GetMapping(

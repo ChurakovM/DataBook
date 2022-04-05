@@ -10,4 +10,5 @@ import java.util.List;
 public class GetBooksResponse {
 
     private List<ShortBookInfoResponse> listOfBooks;
+    // TODO add an error model
 }
